@@ -1,17 +1,21 @@
+// src/app/api/reviews/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAuthUser } from "@/lib/auth";
+import { getAuthUser } from "@/lib/session"; // ✅ fixed
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const user = getAuthUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { collegeId, rating, title, content, pros, cons, batch, course } =
     await request.json();
+
   if (!collegeId || !rating || !title || !content) {
     return NextResponse.json({ error: "Required fields missing" }, { status: 400 });
   }
+
   const review = await prisma.review.create({
     data: {
       userId: user.userId,
@@ -26,6 +30,7 @@ export async function POST(request: NextRequest) {
     },
     include: { user: { select: { name: true } } },
   });
+
   const reviews = await prisma.review.findMany({
     where: { collegeId },
     select: { rating: true },
@@ -35,5 +40,6 @@ export async function POST(request: NextRequest) {
     where: { id: collegeId },
     data: { rating: Math.round(avgRating * 10) / 10, totalReviews: reviews.length },
   });
+
   return NextResponse.json(review, { status: 201 });
 }
