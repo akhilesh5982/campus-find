@@ -1,4 +1,9 @@
 // src/app/api/saved/route.ts
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+// Iske neeche aapka baaki ka poora code jaisa hai waisa hi rahega...
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
