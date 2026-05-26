@@ -1,13 +1,10 @@
 // src/app/api/auth/login/route.ts
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
-
-// Iske neeche aapka baaki ka poora code jaisa hai waisa hi rehne dein...
-
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { signToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {

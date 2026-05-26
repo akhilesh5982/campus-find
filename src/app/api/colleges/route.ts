@@ -1,8 +1,8 @@
-// src/app/api/colleges/route.ts
-export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,16 +11,12 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type") || "";
     const state = searchParams.get("state") || "";
     const category = searchParams.get("category") || "";
-    const minFees = searchParams.get("minFees");
-    const maxFees = searchParams.get("maxFees");
     const minRating = searchParams.get("minRating");
     const sortBy = searchParams.get("sortBy") || "rating";
     const page = parseInt(searchParams.get("page") || "1");
     const pageSize = parseInt(searchParams.get("pageSize") || "9");
 
-    // Build where clause
     const where: Record<string, unknown> = {};
-
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
@@ -33,12 +29,9 @@ export async function GET(request: NextRequest) {
     if (category) where.category = category;
     if (minRating) where.rating = { gte: parseFloat(minRating) };
 
-    // Get total count
     const total = await prisma.college.count({ where });
 
-    // Get paginated results
     let orderBy: Record<string, string> = { rating: "desc" };
-    if (sortBy === "fees") orderBy = { name: "asc" }; // proxy sort
     if (sortBy === "ranking") orderBy = { rankingNIRF: "asc" };
     if (sortBy === "name") orderBy = { name: "asc" };
 
@@ -49,7 +42,6 @@ export async function GET(request: NextRequest) {
       take: pageSize,
     });
 
-    // Check saved status if user is logged in
     const user = getAuthUser();
     let savedIds: string[] = [];
     if (user) {

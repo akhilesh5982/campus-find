@@ -1,8 +1,8 @@
-// src/app/api/colleges/[slug]/route.ts
-export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(
   request: NextRequest,
@@ -30,11 +30,9 @@ export async function GET(
         },
       },
     });
-
     if (!college) {
       return NextResponse.json({ error: "College not found" }, { status: 404 });
     }
-
     const user = getAuthUser();
     let isSaved = false;
     if (user) {
@@ -43,7 +41,6 @@ export async function GET(
       });
       isSaved = !!saved;
     }
-
     return NextResponse.json({
       ...college,
       fees: college.fees as object,
