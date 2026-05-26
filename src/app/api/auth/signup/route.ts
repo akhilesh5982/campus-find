@@ -1,4 +1,8 @@
-// src/app/api/auth/signup/route.ts
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+// Iske neeche aapka baaki ka poora code jaisa hai waisa hi rehne dein...
+
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
